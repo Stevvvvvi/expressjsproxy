@@ -11,18 +11,21 @@ app.use(cors())
 
 app.get('/',async (req, res)  => {
     const url = req.query?.url || "";
+    console.log(url)
     const apiKey = req.header('x-api-key') || ""
     let responseValue={};
+    let status = 200;
     try {
-        const response = await axios.get(url, {headers:{"x-api-key": apiKey}});
+        const response = await axios.get(url, apiKey =="" ? {} : {headers:{"x-api-key": apiKey}});
         responseValue = response.data
         //console.log(responseValue);
       } catch (error) {
         console.error(error);
+        status=400;
         responseValue=error;
     }
     
-    res.send(responseValue)
+    res.status(status).send(responseValue)
 })
 
 app.listen(port, () => {
